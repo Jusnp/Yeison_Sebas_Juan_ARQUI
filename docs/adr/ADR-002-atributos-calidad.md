@@ -1,142 +1,121 @@
-# ADR-001: Identificación de atributos de calidad del sistema
+# ADR-002: Priorización de atributos de calidad con MoSCoW
 
 ## Estado
 Aceptado
 
 ## Contexto
-En el desarrollo del sistema Green, se requiere identificar los atributos de calidad que definirán el comportamiento no funcional del sistema.
+En el Lab 1 se identificaron los atributos de calidad del sistema utilizando el estándar ISO 25010, los cuales representan los requisitos no funcionales que definen cómo debe comportarse el sistema.
 
-Estos atributos se basan en el estándar ISO 25010, el cual establece características de calidad como rendimiento, seguridad, fiabilidad, usabilidad, mantenibilidad, compatibilidad, portabilidad y funcionalidad.
+Sin embargo, no todos los atributos pueden ser optimizados simultáneamente debido a limitaciones de tiempo, recursos y complejidad técnica. Por ello, es necesario priorizarlos para determinar cuáles influirán directamente en la arquitectura del sistema.
 
-El objetivo es traducir las necesidades del negocio en requisitos técnicos medibles, que permitan definir cómo debe comportarse el sistema en condiciones reales de operación.
+Para esta priorización se utiliza la técnica MoSCoW (Must Have, Should Have, Could Have, Won’t Have), la cual permite clasificar los atributos según su importancia para el proyecto.
 
 ---
 
 ## Decisión
 
-Se identifican los siguientes atributos de calidad como relevantes para el sistema:
+Se realiza la priorización de los atributos de calidad mediante la matriz MoSCoW, definiendo los siguientes grupos:
 
+### Must Have
+Atributos críticos sin los cuales el sistema no cumple su objetivo:
 - Rendimiento
 - Seguridad
 - Fiabilidad
-- Usabilidad
 - Mantenibilidad
-- Compatibilidad
 
-Cada atributo ha sido definido mediante escenarios de calidad medibles, permitiendo evaluar su cumplimiento de forma objetiva.
+### Should Have
+Atributos importantes que mejoran la calidad del sistema, pero no son críticos:
+- Usabilidad
+- Auditabilidad
+
+### Could Have
+Atributos deseables que pueden implementarse si hay disponibilidad de tiempo:
+- Compatibilidad
+- Portabilidad
+
+### Won’t Have
+Atributos fuera del alcance en esta etapa del proyecto:
+- Escalabilidad masiva
+- Personalización visual avanzada
 
 ---
 
-## Atributos de Calidad y Escenarios
+## Justificación de los Must Have
 
 ### 1. Rendimiento
-
-**Descripción:**  
-El sistema debe garantizar tiempos de respuesta rápidos y estables ante múltiples solicitudes.
-
-**Escenario de calidad:**  
-- Estímulo: 100 usuarios consultan simultáneamente el estado de sus servicios  
-- Sistema: Plataforma web  
-- Respuesta: El sistema responde sin degradación del servicio  
-- Medida: Tiempo promedio ≤ 2 segundos, máximo ≤ 3 segundos  
-
----
+El sistema debe responder en tiempos óptimos para evitar retrasos en la gestión de servicios.  
+Se establecieron tiempos medibles (≤ 2–3 segundos), lo cual impacta directamente la eficiencia operativa y la experiencia del usuario.
 
 ### 2. Seguridad
-
-**Descripción:**  
-El sistema debe proteger la información mediante autenticación, autorización y cifrado.
-
-**Escenario de calidad:**  
-- Estímulo: Usuario intenta acceder con credenciales inválidas  
-- Sistema: Módulo de autenticación  
-- Respuesta: Acceso denegado y registro del intento  
-- Medida: 100% accesos no autorizados bloqueados  
-
----
+El sistema maneja datos sensibles como credenciales, información de clientes y operaciones.  
+Se requieren mecanismos como autenticación, cifrado y control de acceso para garantizar la protección de la información.
 
 ### 3. Fiabilidad
+El sistema debe garantizar disponibilidad y correcta gestión de los datos, evitando pérdidas de información.  
+Se estableció una disponibilidad mínima del 99% y 0% de pérdida de datos.
 
-**Descripción:**  
-El sistema debe garantizar disponibilidad y consistencia de los datos.
-
-**Escenario de calidad:**  
-- Estímulo: Registro de una solicitud de servicio  
-- Sistema: Base de datos  
-- Respuesta: Información almacenada correctamente  
-- Medida: 0% pérdida de datos, disponibilidad ≥ 99%  
+### 4. Mantenibilidad
+El sistema debe permitir modificaciones sin afectar otros módulos.  
+Esto es clave debido a la estructura modular del sistema (clientes, servicios, pagos, etc.), asegurando su evolución en el tiempo.
 
 ---
 
-### 4. Usabilidad
+## Trade-offs Arquitectónicos
 
-**Descripción:**  
-El sistema debe ser intuitivo y fácil de usar.
+Durante la priorización se identificaron los siguientes compromisos:
 
-**Escenario de calidad:**  
-- Estímulo: Usuario nuevo solicita un servicio  
-- Sistema: Interfaz web  
-- Respuesta: Completa el proceso sin ayuda  
-- Medida: ≤ 3 pasos, tiempo ≤ 2 minutos  
+- Aumentar la seguridad puede impactar el rendimiento (validaciones, cifrado).
+- Mejorar la mantenibilidad puede incrementar el tiempo de desarrollo inicial.
+- Priorizar rendimiento puede limitar ciertas validaciones adicionales.
 
----
-
-### 5. Mantenibilidad
-
-**Descripción:**  
-El sistema debe permitir cambios sin afectar otros módulos.
-
-**Escenario de calidad:**  
-- Estímulo: Modificación del módulo de facturación  
-- Sistema: Arquitectura del sistema  
-- Respuesta: Cambio sin afectar otros módulos  
-- Medida: Impacto ≤ 1 módulo adicional  
+El arquitecto debe equilibrar estos factores para garantizar un sistema eficiente y sostenible.
 
 ---
 
-### 6. Compatibilidad
+## Trazabilidad de Decisiones
 
-**Descripción:**  
-El sistema debe funcionar en diferentes navegadores.
+La priorización realizada en este ADR se basa en:
 
-**Escenario de calidad:**  
-- Estímulo: Acceso desde distintos navegadores  
-- Sistema: Aplicación web  
-- Respuesta: Funciona correctamente  
-- Medida: Compatibilidad ≥ 95% navegadores modernos  
+- Atributos identificados en el ADR-001 (Lab 1)
+- Necesidades del negocio (gestión de servicios, clientes y operaciones)
+- Limitaciones del proyecto (tiempo, equipo, complejidad)
 
----
-
-## Justificación
-
-Los atributos identificados reflejan las necesidades del negocio, especialmente en:
-
-- Reducción de tiempos de atención (rendimiento)
-- Protección de la información (seguridad)
-- Disponibilidad del sistema (fiabilidad)
-- Facilidad de uso para clientes (usabilidad)
-- Capacidad de evolución del sistema (mantenibilidad)
-
-Estos atributos actuarán como drivers arquitectónicos en las siguientes etapas del proyecto.
+Este documento permite entender por qué se priorizaron ciertos atributos y servirá como referencia en decisiones futuras.
 
 ---
 
 ## Consecuencias
 
 ### Positivas
-- Claridad en los requisitos no funcionales
-- Base sólida para decisiones arquitectónicas
-- Facilita la validación del sistema
+- Claridad en los atributos que guían la arquitectura
+- Mejora en la toma de decisiones técnicas
+- Reducción de ambigüedad en el desarrollo
+- Base sólida para el diseño del sistema
 
 ### Negativas
-- Requiere mayor esfuerzo en diseño y desarrollo
-- Puede limitar decisiones técnicas futuras
+- Algunos atributos quedan en segundo plano
+- Se requiere mayor esfuerzo inicial en diseño
+- Posibles limitaciones en funcionalidades futuras
+
+---
+
+## Alternativas consideradas
+
+### 1. No priorizar atributos
+Rechazado por generar ambigüedad en las decisiones arquitectónicas.
+
+### 2. Priorizar todos los atributos por igual
+Rechazado por ser inviable técnica y operativamente.
+
+### 3. Utilizar otra técnica de priorización
+Rechazado debido a que la guía del laboratorio exige el uso de MoSCoW.
 
 ---
 
 ## Conclusión
 
-La identificación de atributos de calidad permite establecer criterios claros de cómo debe comportarse el sistema.  
+Los atributos Must Have (rendimiento, seguridad, fiabilidad y mantenibilidad) se definen como los principales drivers arquitectónicos del sistema.
 
-Estos atributos serán utilizados como base para la priorización (Lab 2) y la selección del patrón arquitectónico (Lab 3).
+Esta priorización establece la base para la selección del patrón arquitectónico en el Lab 3 y orienta el diseño del sistema en las siguientes etapas del proyecto.
+
 
